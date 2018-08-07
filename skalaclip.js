@@ -78,11 +78,11 @@ class Clipper {
     const cA = this.code(xA);
     const cB = this.code(xB);
 
-    if ((cA | cB) == 0) {
+    if ((cA | cB) === 0) {
       return [0, xA, xB];
     }
 
-    if ((cA & cB) != 0) {
+    if ((cA & cB) !== 0) {
       return [-1, xA, xB];
     }
 
@@ -112,7 +112,7 @@ class Clipper {
     if (cA === 0) {
       let newXB = null;
 
-      if ((cB & mask[c]) == 0) {
+      if ((cB & mask[c]) === 0) {
         newXB = cross(p, this.e[i]);
       } else {
         newXB = cross(p, this.e[j]);
@@ -123,7 +123,7 @@ class Clipper {
     if (cB === 0) {
       let newXA = null;
 
-      if ((cA & mask[c]) == 0) {
+      if ((cA & mask[c]) === 0) {
         newXA = cross(p, this.e[i]);
       } else {
         newXA = cross(p, this.e[j]);
