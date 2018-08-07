@@ -1,5 +1,3 @@
-'use strict';
-
 class Particle {
     constructor(x, y, vx, vy) {
         this.x = x;
