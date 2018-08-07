@@ -112,7 +112,7 @@ function draw() {
         new Point(frameRight, frameBottom));
 
     for (var i = 0; i < lines.length; i++) {
-        var [a, b] = lines[i]
+        var [a, b] = lines[i];
 
         ctx.save();
         ctx.strokeStyle="rgb(210,210,210)";
