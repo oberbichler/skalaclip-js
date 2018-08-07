@@ -108,8 +108,8 @@ function draw() {
     ctx.fill();
     ctx.restore();
 
-    var clipper = new Clipper(Point(frame_left, frame_top),
-        Point(frame_right, frame_bottom));
+    var clipper = new Clipper(new Point(frame_left, frame_top),
+        new Point(frame_right, frame_bottom));
 
     for (var i = 0; i < lines.length; i++) {
         var [a, b] = lines[i]
