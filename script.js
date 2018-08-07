@@ -94,22 +94,22 @@ function draw() {
     canvas.style.height = `${window.innerHeight}px`;
     ctx.scale(factor, factor);
 
-    var frame_left = (window.innerWidth - frameWidth) * 0.5;
-    var frame_right = (window.innerWidth + frameWidth) * 0.5;
-    var frame_top = (window.innerHeight - frameHeight) * 0.5;
-    var frame_bottom = (window.innerHeight + frameHeight) * 0.5;
+    var frameLeft = (window.innerWidth - frameWidth) * 0.5;
+    var frameRight = (window.innerWidth + frameWidth) * 0.5;
+    var frameTop = (window.innerHeight - frameHeight) * 0.5;
+    var frameBottom = (window.innerHeight + frameHeight) * 0.5;
 
     ctx.save();
     ctx.shadowBlur=30;
     ctx.shadowColor="rgb(210,210,210)";
     ctx.fillStyle = "white";
     ctx.beginPath();
-    ctx.rect(frame_left, frame_top, frameWidth, frameHeight);
+    ctx.rect(frameLeft, frameTop, frameWidth, frameHeight);
     ctx.fill();
     ctx.restore();
 
-    var clipper = new Clipper(new Point(frame_left, frame_top),
-        new Point(frame_right, frame_bottom));
+    var clipper = new Clipper(new Point(frameLeft, frameTop),
+        new Point(frameRight, frameBottom));
 
     for (var i = 0; i < lines.length; i++) {
         var [a, b] = lines[i]
