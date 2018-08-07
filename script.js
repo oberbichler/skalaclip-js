@@ -7,15 +7,15 @@ class Particle {
   }
 
   static random() {
-    var random = function (min, max) {
+    function rnd(min, max) {
       return Math.floor(min + Math.random() * (max - min));
     }
 
-    var x = random(0.0, window.innerWidth);
-    var y = random(0.0, window.innerHeight);
+    const x = rnd(0.0, window.innerWidth);
+    const y = rnd(0.0, window.innerHeight);
 
-    var vx = random(-5.0, 5.0);
-    var vy = random(-5.0, 5.0);
+    const vx = rnd(-5.0, 5.0);
+    const vy = rnd(-5.0, 5.0);
 
     return new Particle(x, y, vx, vy);
   }
@@ -39,24 +39,25 @@ class Particle {
   }
 }
 
-function getFactor() {
-  var isRetina = (window.devicePixelRatio > 1);
+function getFactor(ctx) {
+  const isRetina = (window.devicePixelRatio > 1);
 
-  var isIOS = ((ctx.webkitBackingStorePixelRatio < 2) || (ctx.webkitBackingStorePixelRatio == undefined));
+  const isIOS = ((ctx.webkitBackingStorePixelRatio < 2)
+    || (ctx.webkitBackingStorePixelRatio === undefined));
 
   if (isRetina && isIOS) {
     return 2;
-  } else {
-    return 1;
   }
+
+  return 1;
 }
 
 function createRandomLines(numberOfLines) {
-  var lines = [];
+  const lines = [];
 
-  for (var i = 0; i < numberOfLines; i++) {
-    var a = Particle.random();
-    var b = Particle.random();
+  for (let i = 0; i < numberOfLines; i += 1) {
+    const a = Particle.random();
+    const b = Particle.random();
 
     lines.push([a, b]);
   }
@@ -64,15 +65,15 @@ function createRandomLines(numberOfLines) {
   return lines;
 }
 
-var canvas = document.querySelector('canvas');
-var ctx = canvas.getContext('2d');
+const canvas = document.querySelector('canvas');
+const ctx = canvas.getContext('2d');
 
-var factor = getFactor();
+const factor = getFactor(ctx);
 
-var lines = createRandomLines(10);
+const lines = createRandomLines(10);
 
-var frameWidth = 500.;
-var frameHeight = 500.;
+const frameWidth = 500.0;
+const frameHeight = 500.0;
 
 function loop() {
   clear();
@@ -92,10 +93,10 @@ function draw() {
   canvas.style.height = `${window.innerHeight}px`;
   ctx.scale(factor, factor);
 
-  var frameLeft = (window.innerWidth - frameWidth) * 0.5;
-  var frameRight = (window.innerWidth + frameWidth) * 0.5;
-  var frameTop = (window.innerHeight - frameHeight) * 0.5;
-  var frameBottom = (window.innerHeight + frameHeight) * 0.5;
+  const frameLeft = (window.innerWidth - frameWidth) * 0.5;
+  const frameRight = (window.innerWidth + frameWidth) * 0.5;
+  const frameTop = (window.innerHeight - frameHeight) * 0.5;
+  const frameBottom = (window.innerHeight + frameHeight) * 0.5;
 
   ctx.save();
   ctx.shadowBlur = 30;
@@ -106,11 +107,11 @@ function draw() {
   ctx.fill();
   ctx.restore();
 
-  var clipper = new Clipper(new Point(frameLeft, frameTop),
+  const clipper = new Clipper(new Point(frameLeft, frameTop),
     new Point(frameRight, frameBottom));
 
-  for (var i = 0; i < lines.length; i++) {
-    var [a, b] = lines[i];
+  for (let i = 0; i < lines.length; i += 1) {
+    let [a, b] = lines[i];
 
     ctx.save();
     ctx.strokeStyle = 'rgb(210,210,210)';
@@ -120,24 +121,24 @@ function draw() {
     ctx.stroke();
     ctx.restore();
 
-    var [result, a, b] = clipper.clipLine(a, b);
+    let result = 0;
 
-    if (result < 0) {
-      continue;
+    [result, a, b] = clipper.clipLine(a, b);
+
+    if (result > -1) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+      ctx.restore();
     }
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    ctx.lineTo(b.x, b.y);
-    ctx.stroke();
-    ctx.restore();
   }
 }
 
 function update() {
-  for (var i = 0; i < lines.length; i++) {
-    var [a, b] = lines[i]
+  for (let i = 0; i < lines.length; i += 1) {
+    const [a, b] = lines[i];
     a.update();
     b.update();
   }
