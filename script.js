@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class Particle {
     constructor(x, y, vx, vy) {
@@ -66,8 +66,8 @@ function createRandomLines(numberOfLines) {
     return lines;
 }
 
-var canvas = document.querySelector("canvas");
-var ctx = canvas.getContext("2d");
+var canvas = document.querySelector('canvas');
+var ctx = canvas.getContext('2d');
 
 var factor = getFactor();
 
@@ -101,8 +101,8 @@ function draw() {
 
     ctx.save();
     ctx.shadowBlur=30;
-    ctx.shadowColor="rgb(210,210,210)";
-    ctx.fillStyle = "white";
+    ctx.shadowColor='rgb(210,210,210)';
+    ctx.fillStyle = 'white';
     ctx.beginPath();
     ctx.rect(frameLeft, frameTop, frameWidth, frameHeight);
     ctx.fill();
@@ -115,7 +115,7 @@ function draw() {
         var [a, b] = lines[i];
 
         ctx.save();
-        ctx.strokeStyle="rgb(210,210,210)";
+        ctx.strokeStyle='rgb(210,210,210)';
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
