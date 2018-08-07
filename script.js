@@ -73,8 +73,8 @@ var factor = getFactor();
 
 var lines = createRandomLines(10);
 
-var frame_width = 500.;
-var frame_height = 500.;
+var frameWidth = 500.;
+var frameHeight = 500.;
 
 function loop() {
     clear();
@@ -94,17 +94,17 @@ function draw() {
     canvas.style.height = `${window.innerHeight}px`;
     ctx.scale(factor, factor);
 
-    var frame_left = (window.innerWidth - frame_width) * 0.5;
-    var frame_right = (window.innerWidth + frame_width) * 0.5;
-    var frame_top = (window.innerHeight - frame_height) * 0.5;
-    var frame_bottom = (window.innerHeight + frame_height) * 0.5;
+    var frame_left = (window.innerWidth - frameWidth) * 0.5;
+    var frame_right = (window.innerWidth + frameWidth) * 0.5;
+    var frame_top = (window.innerHeight - frameHeight) * 0.5;
+    var frame_bottom = (window.innerHeight + frameHeight) * 0.5;
 
     ctx.save();
     ctx.shadowBlur=30;
     ctx.shadowColor="rgb(210,210,210)";
     ctx.fillStyle = "white";
     ctx.beginPath();
-    ctx.rect(frame_left, frame_top, frame_width, frame_height);
+    ctx.rect(frame_left, frame_top, frameWidth, frameHeight);
     ctx.fill();
     ctx.restore();
 
