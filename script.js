@@ -1,152 +1,151 @@
-"use strict";
-
 class Particle {
-    constructor(x, y, vx, vy) {
-        this.x = x;
-        this.y = y;
-        this.vx = vx;
-        this.vy = vy;
+  constructor(x, y, vx, vy) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+  }
+
+  static random() {
+    function rnd(min, max) {
+      return Math.floor(min + Math.random() * (max - min));
     }
 
-    static random() {
-        var random = function(min, max) {
-            return Math.floor(min + Math.random() * (max - min));
-        }
+    const x = rnd(0.0, window.innerWidth);
+    const y = rnd(0.0, window.innerHeight);
 
-        var x = random(0.0, window.innerWidth);
-        var y = random(0.0, window.innerHeight);
+    const vx = rnd(-5.0, 5.0);
+    const vy = rnd(-5.0, 5.0);
 
-        var vx = random(-5.0, 5.0);
-        var vy = random(-5.0, 5.0);
+    return new Particle(x, y, vx, vy);
+  }
 
-        return new Particle(x, y, vx, vy);
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+
+    if (this.x < 0) {
+      this.vx *= -1;
     }
-
-    update() {
-        this.x += this.vx;
-        this.y += this.vy;
-
-        if (this.x < 0) {
-            this.vx *= -1;
-        }
-        if (this.y < 0) {
-            this.vy *= -1;
-        }
-        if (this.x > window.innerWidth) {
-            this.vx *= -1;
-        }
-        if (this.y > window.innerHeight) {
-            this.vy *= -1;
-        }
+    if (this.y < 0) {
+      this.vy *= -1;
     }
+    if (this.x > window.innerWidth) {
+      this.vx *= -1;
+    }
+    if (this.y > window.innerHeight) {
+      this.vy *= -1;
+    }
+  }
 }
 
-function getFactor() {
-    var isRetina = (window.devicePixelRatio > 1);
+function getFactor(ctx) {
+  const isRetina = (window.devicePixelRatio > 1);
 
-    var isIOS = ((ctx.webkitBackingStorePixelRatio < 2) || (ctx.webkitBackingStorePixelRatio == undefined));
+  const isIOS = ((ctx.webkitBackingStorePixelRatio < 2)
+    || (ctx.webkitBackingStorePixelRatio === undefined));
 
-    if (isRetina && isIOS) {
-        return 2;	
-    } else {
-        return 1;
-    }
+  if (isRetina && isIOS) {
+    return 2;
+  }
+
+  return 1;
 }
 
 function createRandomLines(numberOfLines) {
-    var lines = [];
+  const lines = [];
 
-    for(var i = 0; i < numberOfLines; i++) {
-        var a = Particle.random();
-        var b = Particle.random();
+  for (let i = 0; i < numberOfLines; i += 1) {
+    const a = Particle.random();
+    const b = Particle.random();
 
-        lines.push([a, b]);
-    }
+    lines.push([a, b]);
+  }
 
-    return lines;
+  return lines;
 }
 
-var canvas = document.querySelector("canvas");
-var ctx = canvas.getContext("2d");
+const canvas = document.querySelector('canvas');
+const ctx = canvas.getContext('2d');
 
-var factor = getFactor();
+const factor = getFactor(ctx);
 
-var lines = createRandomLines(10);
+const lines = createRandomLines(10);
 
-var frame_width = 500.;
-var frame_height = 500.;
+const frameWidth = 500.0;
+const frameHeight = 500.0;
 
 function loop() {
-    clear();
-    draw();
-    update();
-    queue();
+  clear();
+  draw();
+  update();
+  queue();
 }
 
 function clear() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function draw() {
-    canvas.width = window.innerWidth * factor;
-    canvas.height = window.innerHeight * factor;
-    canvas.style.width = `${window.innerWidth}px`;
-    canvas.style.height = `${window.innerHeight}px`;
-    ctx.scale(factor, factor);
+  canvas.width = window.innerWidth * factor;
+  canvas.height = window.innerHeight * factor;
+  canvas.style.width = `${window.innerWidth}px`;
+  canvas.style.height = `${window.innerHeight}px`;
+  ctx.scale(factor, factor);
 
-    var frame_left = (window.innerWidth - frame_width) * 0.5;
-    var frame_right = (window.innerWidth + frame_width) * 0.5;
-    var frame_top = (window.innerHeight - frame_height) * 0.5;
-    var frame_bottom = (window.innerHeight + frame_height) * 0.5;
+  const frameLeft = (window.innerWidth - frameWidth) * 0.5;
+  const frameRight = (window.innerWidth + frameWidth) * 0.5;
+  const frameTop = (window.innerHeight - frameHeight) * 0.5;
+  const frameBottom = (window.innerHeight + frameHeight) * 0.5;
+
+  ctx.save();
+  ctx.shadowBlur = 30;
+  ctx.shadowColor = 'rgb(210,210,210)';
+  ctx.fillStyle = 'white';
+  ctx.beginPath();
+  ctx.rect(frameLeft, frameTop, frameWidth, frameHeight);
+  ctx.fill();
+  ctx.restore();
+
+  const clipper = new Clipper(new Point(frameLeft, frameTop),
+    new Point(frameRight, frameBottom));
+
+  for (let i = 0; i < lines.length; i += 1) {
+    let [a, b] = lines[i];
 
     ctx.save();
-    ctx.shadowBlur=30;
-    ctx.shadowColor="rgb(210,210,210)";
-    ctx.fillStyle = "white";
+    ctx.strokeStyle = 'rgb(210,210,210)';
     ctx.beginPath();
-    ctx.rect(frame_left, frame_top, frame_width, frame_height);
-    ctx.fill();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.stroke();
     ctx.restore();
 
-    var clipper = new Clipper(Point(frame_left, frame_top),
-        Point(frame_right, frame_bottom));
+    let result = 0;
 
-    for (var i = 0; i < lines.length; i++) {
-        var [a, b] = lines[i]
+    [result, a, b] = clipper.clipLine(a, b);
 
-        ctx.save();
-        ctx.strokeStyle="rgb(210,210,210)";
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
-        ctx.restore();
-
-        var [result, a, b] = clipper.clipLine(a, b);
-
-        if (result < 0) {
-            continue;
-        }
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
-        ctx.restore();
+    if (result > -1) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+      ctx.restore();
     }
+  }
 }
 
 function update() {
-    for (var i = 0; i < lines.length; i++) {
-        var [a, b] = lines[i]
-        a.update();
-        b.update();
-    }
+  for (let i = 0; i < lines.length; i += 1) {
+    const [a, b] = lines[i];
+    a.update();
+    b.update();
+  }
 }
 
 function queue() {
-    window.requestAnimationFrame(loop);
+  window.requestAnimationFrame(loop);
 }
 
 loop();
